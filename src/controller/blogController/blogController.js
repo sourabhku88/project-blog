@@ -52,7 +52,7 @@ const deleteBlog=async (req,res)=>{
 }
 
 
-// DELETE BLOG BY CATEGORY
+// DELETE BLOG BY Any
 const deleteBlogByAny=async (req,res)=>{
     try{
         let arry={...req.query}
