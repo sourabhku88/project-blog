@@ -1,6 +1,4 @@
- 
 const mongoose = require("mongoose");
-
 const objectId= mongoose.Schema.Types.ObjectId
 const blogSchema= new mongoose.Schema({
     title:{
@@ -13,7 +11,7 @@ const blogSchema= new mongoose.Schema({
     },
      authorId:{
         type : objectId,
-        ref: authorId,
+        ref: "author",
         required: true
      },
      tag:{
@@ -28,32 +26,23 @@ const blogSchema= new mongoose.Schema({
         type: [String],
         required: true
      },
-    
      deletedAt:{
-        type: Date
-        
+        type: Date,
+        default: "",
      },
      isDeleted:{
         type: Boolean,
         default: false
      },
-     
-
      publishedAt:{ 
         type: Date,
-     default: Date.now
+        default: Date.now
      },
-
-        isPublished:{
-            
-            type: Boolean,
-            default: false
-        }
-      
-        
+     isPublished:{
+      type: Boolean,
+      default: false
+      }
      },{timestamps: true})
-
-
 
 
 module.exports= mongoose.model("Blog",blogSchema ) 
