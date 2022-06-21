@@ -1,6 +1,7 @@
 const blogModel = require('../../model/blogModel')
 const authorModel = require('../../model/authorModel')
 const mongoose = require('mongoose')
+const { query } = require('express')
 
 // CREATE BLOG
 const createBlog =  async (req,res)=>{
@@ -30,7 +31,7 @@ const getBlogs = async (req,res)=>{
     catch(err) {res.status(500).send({status: false, msg:err.message})}
 }
 
-// GET BLOGS
+// UPDATE BLOGS
 const updateBlog = async (req,res)=>{
     try{
         // const 
@@ -38,6 +39,7 @@ const updateBlog = async (req,res)=>{
     catch(err){res.status(500).send({status: false, msg:err.message})
     }
 }
+
 
 // DELETE
 
@@ -49,8 +51,23 @@ const deleteBlog=async (req,res)=>{
     }catch(err){return res.status(500).send(err)}
 }
 
+
+// DELETE BLOG BY CATEGORY
+const deleteBlogByAny=async (req,res)=>{
+    try{
+        let arry={...req.query}
+        if(arry != {}){
+            await blogModel.updateMany(arry,{isDeleted:true,deletedAt:new Date})
+            return res.status(200).send({status:true})
+        }else{return res.status(400).send({status:false})}
+    }catch(err){
+        return res.status(500).send(err)
+    }
+}
+
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlog = updateBlog;
 module.exports.deleteBlog = deleteBlog;
+module.exports.deleteBlogByAny = deleteBlogByAny;
 
