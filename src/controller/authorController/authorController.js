@@ -1,5 +1,5 @@
 
-const authorModel = require("../model/authorModel.js");
+const authorModel = require("../../model/authorModel.js");
 
 const createAuthor = async (req, res) => {
     try {

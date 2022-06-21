@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 const url = "mongodb+srv://sourabh:sourabh@cluster0.k4izw.mongodb.net/projectblog?retryWrites=true&w=majority";
-mongoose.connect(url,{ useNewUrlParser: true, }).then(()=>console.log('connet mongoDB')).catch((err)=>console.log(err))
+mongoose.connect(url,{ useNewUrlParser: true, }).then(()=>console.log('connect mongoDB')).catch((err)=>console.log(err))
 
 
 
