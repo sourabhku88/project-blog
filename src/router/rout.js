@@ -14,7 +14,7 @@ router.post('/authors', createAuthor)
 
 router.post('/blogs', createBlog)
 
-router.get('/blogs',blogDeleteCheck , getBlogs )
+router.get('/blogs', getBlogs )
 
 router.put('/blogs/:blogId', blogDeleteCheck , )
 
