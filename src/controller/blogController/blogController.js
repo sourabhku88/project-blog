@@ -39,15 +39,18 @@ const updateBlog = async (req,res)=>{
     }
 }
 
-//DELETE
+// DELETE
 
-// const deleteBlog=async (req,res)=>{
-//     let blogId=req.params.blogId
-//     let blogData=await blogModel.findByIdAndUpdate(blogId,{$set:{isDeleted:true}})
-
-// }
+const deleteBlog=async (req,res)=>{
+    try{
+    let blogId=req.params.blogId
+    await blogModel.findByIdAndUpdate(blogId,{isDeleted:true,deletedAt:new Date})
+    return res.status(200).send({status:true})
+    }catch(err){return res.status(500).send(err)}
+}
 
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlog = updateBlog;
+module.exports.deleteBlog = deleteBlog;
 
