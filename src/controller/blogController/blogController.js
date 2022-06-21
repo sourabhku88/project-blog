@@ -1,6 +1,7 @@
 const blogModel = require('../../model/blogModel')
 const authorModel = require('../../model/authorModel')
 const mongoose = require('mongoose')
+const { query } = require('express')
 
 // CREATE BLOG
 const createBlog =  async (req,res)=>{
@@ -30,7 +31,7 @@ const getBlogs = async (req,res)=>{
     catch(err) {res.status(500).send({status: false, msg:err.message})}
 }
 
-// GET BLOGS
+// UPDATE BLOGS
 const updateBlog = async (req,res)=>{
     try{
         const data = req.body;
@@ -55,15 +56,34 @@ const updateBlog = async (req,res)=>{
     }
 }
 
-//DELETE
 
-// const deleteBlog=async (req,res)=>{
-//     let blogId=req.params.blogId
-//     let blogData=await blogModel.findByIdAndUpdate(blogId,{$set:{isDeleted:true}})
+// DELETE
 
-// }
+const deleteBlog=async (req,res)=>{
+    try{
+    let blogId=req.params.blogId
+    await blogModel.findByIdAndUpdate(blogId,{isDeleted:true,deletedAt:new Date})
+    return res.status(200).send({status:true})
+    }catch(err){return res.status(500).send(err)}
+}
+
+
+// DELETE BLOG BY CATEGORY
+const deleteBlogByAny=async (req,res)=>{
+    try{
+        let arry={...req.query}
+        if(arry != {}){
+            await blogModel.updateMany(arry,{isDeleted:true,deletedAt:new Date})
+            return res.status(200).send({status:true})
+        }else{return res.status(400).send({status:false})}
+    }catch(err){
+        return res.status(500).send(err)
+    }
+}
 
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlog = updateBlog;
+module.exports.deleteBlog = deleteBlog;
+module.exports.deleteBlogByAny = deleteBlogByAny;
 
