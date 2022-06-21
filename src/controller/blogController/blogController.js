@@ -26,16 +26,7 @@ const createBlog = async (req, res) => {
 const getBlogs = async (req, res) => {
     try {
 
-        let allBlogData = await blogModel.find({ isDeleted: false, isPublished: true });
-
-        if (Object.keys(allBlogData).length != 0) {
-
-            res.status(200).send({ msg: "successful.", data: allBlogData });
-        }
-        else {
-
-            res.status(404).send({ msg: "Page not found." });
-        }
+       
 
 
     }
@@ -45,7 +36,8 @@ const getBlogs = async (req, res) => {
 // GET BLOGS
 const updateBlog = async (req, res) => {
     try {
-        // const 
+        
+
     }
     catch (err) {
         res.status(500).send({ status: false, msg: err.message })
