@@ -34,7 +34,23 @@ const getBlogs = async (req,res)=>{
 // UPDATE BLOGS
 const updateBlog = async (req,res)=>{
     try{
-        // const 
+        const data = req.body;
+        if(Object.keys(data).length == 0)return res.status(400).send({status: false, msg:"body require"})
+        const blogId = req.params.blogId
+        const blog = await blogModel.findById(blogId)
+        if(!blog) return res.status(400).send({status: false, msg:"no such Blog present"})
+
+        if(data.tag)   blog.tag.push(data.tag);
+        if(data.subcatogry)  blog.subcatogry.push(data.subcatogry);
+        blog.title = data.title
+        blog.body = data.body;
+        blog.isPublished = true
+        blog.publishedAt = new Date
+
+        const updateData = await blog.save()
+        
+        return res.status(200).send({status:true,msg:updateData})
+
     }
     catch(err){res.status(500).send({status: false, msg:err.message})
     }
@@ -48,7 +64,7 @@ const deleteBlog=async (req,res)=>{
     let blogId=req.params.blogId
     await blogModel.findByIdAndUpdate(blogId,{isDeleted:true,deletedAt:new Date})
     return res.status(200).send({status:true})
-    }catch(err){return res.status(500).send(err)}
+    }catch(err){return res.status(500).send({status: false, msg:err.message})}
 }
 
 
@@ -56,12 +72,12 @@ const deleteBlog=async (req,res)=>{
 const deleteBlogByAny=async (req,res)=>{
     try{
         let arry={...req.query}
-        if(arry != {}){
+        if(Object.keys(arry).length != 0){
             await blogModel.updateMany(arry,{isDeleted:true,deletedAt:new Date})
             return res.status(200).send({status:true})
         }else{return res.status(400).send({status:false})}
     }catch(err){
-        return res.status(500).send(err)
+        return res.status(500).send({status: false, msg:err.message})
     }
 }
 
