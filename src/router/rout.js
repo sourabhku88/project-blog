@@ -1,6 +1,6 @@
 const express =require('express');
 const { createAuthor } = require('../controller/authorController/authorController');
-const { createBlog, getBlogs } = require('../controller/blogController/blogController');
+const { createBlog, getBlogs ,updateBlog } = require('../controller/blogController/blogController');
 const { blogDeleteCheck } = require('../middleWares/deleteCheck');
 const router =express.Router();
 
@@ -16,7 +16,7 @@ router.post('/blogs', createBlog)
 
 router.get('/blogs',blogDeleteCheck , getBlogs )
 
-router.put('/blogs/:blogId', blogDeleteCheck , )
+router.put('/blogs/:blogId', blogDeleteCheck ,updateBlog )
 
 router.delete('/blogs',  )
 

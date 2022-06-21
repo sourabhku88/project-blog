@@ -33,7 +33,23 @@ const getBlogs = async (req,res)=>{
 // GET BLOGS
 const updateBlog = async (req,res)=>{
     try{
-        // const 
+        const data = req.body;
+        if(Object.keys(data).length == 0)return res.status(400).send({status: false, msg:"body require"})
+        const blogId = req.params.blogId
+        const blog = await blogModel.findById(blogId)
+        if(!blog) return res.status(400).send({status: false, msg:"no such Blog present"})
+
+        if(data.tag)   blog.tag.push(data.tag);
+        if(data.subcatogry)  blog.subcatogry.push(data.subcatogry);
+        blog.title = data.title
+        blog.body = data.body;
+        blog.isPublished = true
+        blog.publishedAt = new Date
+
+        const updateData = await blog.save()
+        
+        return res.status(200).send({status:true,msg:updateData})
+
     }
     catch(err){res.status(500).send({status: false, msg:err.message})
     }
