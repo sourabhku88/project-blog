@@ -44,10 +44,14 @@ const getBlogs = async (req,res)=>{
             }
             if (req.query.authorId){
                 if(!mongoose.isValidObjectId(req.query.authorId))return res.status(400).send({status: false, msg:"please enter valid authorID"})
+                const filterData = await blogModel.find({authorId:req.query.authorId,isDeleted:false, isPublished:true})
+                if(filterData.length <= 0) return res.status(404).send({status:false, msg:"Not found blog"})
             }
             const filterData = await blogModel.find(req.query );
+            
             const isdeletAndISpublish = filterData.filter(ele => !ele.isDeleted &&  ele.isPublished);
             if(filterData.length <= 0) return res.status(404).send({status:false, msg:"Not found blog"})
+
             return res.status(200).send({status:true, data:isdeletAndISpublish})
         }
     }
