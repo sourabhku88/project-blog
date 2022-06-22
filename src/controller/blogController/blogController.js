@@ -12,13 +12,13 @@ const createBlog =  async (req,res)=>{
        const author = await authorModel.findById(req.body.authorId);
        if(!author) return res.status(400).send({status: false, msg:"no such author present"})
 
-       const data = await blogModel.create(req.body);
+        const data = await blogModel.create(req.body);
 
      return  res.status(201).send({status: true, msg:data})
     }
-    catch(err){
+    catch (err) {
         console.log(err.message);
-        res.status(500).send({status: false, msg:err.message})
+        res.status(500).send({ status: false, msg: err.message })
     }
 }
 
@@ -26,23 +26,27 @@ const createBlog =  async (req,res)=>{
 const getBlogs = async (req,res)=>{
     try{
         const data = await blogModel.find({isDeleted:false, isPublished:true});
-        if(!(data.length > 0)) return res.status(404).send({status:true,msg:"Blog not Found"});
+        if(!(data.length > 0)) return res.status(404).send({status:false,msg:"Blog not Found"});
 
         if(Object.keys(req.query).length == 0){
             return res.status(200).send({status:true, data})
         }else{
-            if(req.query.tag){
-                const filterData = await blogModel.find({tag:{$in:[req.query.tag]} ,isDeleted:false, isPublished:true });
+            if(req.query.tag  ){
+                const filterData = await blogModel.find({tag:{$in:[ req.query.tag  ] },isDeleted:false, isPublished:true });
                 if(filterData.length == 0) return res.status(404).send({status:false, msg:"not found blog"})
                 return res.status(200).send({status:true, data:filterData})
-            } 
+            } else if (req.query.subcatogry){
+                const filterData = await blogModel.find({subcatogry:{$in:[  req.query.subcatogry  ] }, isDeleted:false, isPublished:true });
+                if(filterData.length == 0) return res.status(404).send({status:false, msg:"not found blog"})
+                return res.status(200).send({status:true, data:filterData})
+            }
             const filterData = await blogModel.find(req.query );
-             const isdeletAndISpublish = filterData.filter(ele=> !ele.isDeleted &&  ele.isPublished);
+             const isdeletAndISpublish = filterData.filter(ele => !ele.isDeleted &&  ele.isPublished);
             if(filterData.length === 0) return res.status(404).send({status:false, msg:"Not found blog"})
             return res.status(200).send({status:true, data:isdeletAndISpublish})
         }
     }
-    catch(err) {res.status(500).send({status: false, msg:err.message})}
+    catch (err) { res.status(500).send({ status: false, msg: err.message }) }
 }
 
 // UPDATE BLOGS
@@ -66,7 +70,8 @@ const updateBlog = async (req,res)=>{
         return res.status(200).send({status:true,msg:updateData})
 
     }
-    catch(err){res.status(500).send({status: false, msg:err.message})
+    catch (err) {
+        res.status(500).send({ status: false, msg: err.message })
     }
 }
 
@@ -78,20 +83,21 @@ const deleteBlog=async (req,res)=>{
     let blogId=req.params.blogId
     await blogModel.findByIdAndUpdate(blogId,{isDeleted:true,deletedAt:new Date})
     return res.status(200).send({status:true})
-    }catch(err){return res.status(500).send(err)}
+    }catch(err){return res.status(500).send({status: false, msg:err.message})}
 }
 
 
-// DELETE BLOG BY CATEGORY
+// DELETE BLOG BY Any
 const deleteBlogByAny=async (req,res)=>{
     try{
         let arry={...req.query}
         if(Object.key(arry).length != {}){
+
             await blogModel.updateMany(arry,{isDeleted:true,deletedAt:new Date})
             return res.status(200).send({status:true})
         }else{return res.status(400).send({status:false})}
     }catch(err){
-        return res.status(500).send(err.message)
+        return res.status(500).send({status: false, msg:err.message})
     }
 }
 
