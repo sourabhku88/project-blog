@@ -9,7 +9,7 @@ const createAuthor = async (req, res) => {
 
             let savedData = await authorModel.create(data)
 
-            res.status(201).send({status:true,  msg: savedData })
+            res.status(201).send({status:true,  data: savedData })
         }
         else {
             res.status(400).send({status:false, msg: "BAD REQUEST" })
@@ -17,7 +17,7 @@ const createAuthor = async (req, res) => {
 
     }
     catch (error) {
-        res.status(500).send({status:false, msg: " internal server error", ERROR: error.message })
+        res.status(500).send({status:false, msg:error.message })
     }
 }
 

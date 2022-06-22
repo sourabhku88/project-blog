@@ -15,7 +15,7 @@ router.get('/blogs', getBlogs )
 
 router.put('/blogs/:blogId', blogDeleteCheck ,updateBlog )
 
-router.delete('/blogs',deleteBlogByAny )
+router.delete('/blogs', deleteBlogByAny )
 
 router.delete('/blogs/:blogId', deleteBlog )
 
