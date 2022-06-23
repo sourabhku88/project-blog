@@ -6,6 +6,8 @@ const { createBlog, getBlogs ,updateBlog ,deleteBlog ,deleteBlogByAny} = require
 const { blogDeleteCheck } = require('../middleWares/deleteCheck');
 const router =express.Router();
 
+const lognUser = require("../controller/userController/loginUser");
+
 
 router.post('/authors', createAuthor)
 
@@ -18,6 +20,9 @@ router.put('/blogs/:blogId', blogDeleteCheck ,updateBlog )
 router.delete('/blogs', deleteBlogByAny )
 
 router.delete('/blogs/:blogId', deleteBlog )
+
+
+router.post('/login', lognUser.lognUser);
 
 
 module.exports = router;
