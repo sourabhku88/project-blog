@@ -33,6 +33,7 @@ const createBlog = async (req, res) => {
   }
 };
 
+
 // GET BLOGS
 const getBlogs = async (req, res) => {
     try{

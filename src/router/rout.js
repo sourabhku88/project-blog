@@ -1,5 +1,5 @@
 const express =require('express');
-const { createAuthor } = require('../controller/authorController/authorController');
+const { createAuthor,loginAuthor} = require('../controller/authorController/authorController');
 const { createBlog, getBlogs ,updateBlog ,deleteBlog ,deleteBlogByAny} = require('../controller/blogController/blogController');
 const authentication = require('../middleWares/auth');
 
@@ -9,6 +9,8 @@ const router =express.Router();
 
 
 router.post('/authors', createAuthor)
+
+router.post('/author/login', loginAuthor)
 
 router.post('/blogs', createBlog)
 
