@@ -19,7 +19,6 @@ const createBlog =  async (req,res)=>{
      return  res.status(201).send({status: true, data})
     }
     catch (err) {
-        console.log(err.message);
         res.status(500).send({ status: false, msg: err.message })
     }
 }
