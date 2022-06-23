@@ -8,7 +8,9 @@ const authentication = async (req, res, next) => {
         const token = req.headers["x-api-key"];
         if (!token) return res.status(401).send({ status: false, msg: "user has no token" });
 
-        jwt.verify(token, "ROOM 26(shubhra,shivanand,sourabh,shiv)/blog-project-1");
+        const authorDetail = jwt.verify(token, "ROOM 26(shubhra,shivanand,sourabh,shiv)/blog-project-1");
+
+        req.authorDetail = authorDetail;
 
         next()
 
