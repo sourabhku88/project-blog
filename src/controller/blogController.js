@@ -1,5 +1,5 @@
-const blogModel = require("../../model/blogModel");
-const authorModel = require("../../model/authorModel");
+const blogModel = require("../model/blogModel");
+const authorModel = require("../model/authorModel");
 const mongoose = require("mongoose");
 
 // CREATE BLOG
@@ -129,7 +129,7 @@ const deleteBlogByAny = async (req, res) => {
 };
 
 module.exports.createBlog = createBlog;
-module.exports.getBlogs = getBlogs;
+module.exports.getBlogs =   getBlogs;
 module.exports.updateBlog = updateBlog;
 module.exports.deleteBlog = deleteBlog;
 module.exports.deleteBlogByAny = deleteBlogByAny;
