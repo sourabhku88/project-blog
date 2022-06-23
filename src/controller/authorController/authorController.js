@@ -35,7 +35,7 @@ const loginAuthor = async (req,res)=>{
     email=email.toLowerCase()
     let authorDetail=await authorModel.findOne({email,password})
 
-    if(!authorDetail) return res.status(400).send({status:false,msg:"email or password is invalid"})
+    if(!authorDetail) return res.status(404).send({status:false,msg:"email or password is invalid"})
     let token=sign(
         {
         _id:authorDetail._id
