@@ -1,13 +1,11 @@
 const jwt = require('jsonwebtoken');
 
-const authentication = async (req,res)=>{
+const authentication = async (req,res , next)=>{
     try{
         const token = req.headers["x-api-key"];
         if(!token) return res.status(401).send({status:false,msg:"user has no token" });
 
-        const isValidToken = jwt.verify(token , "ROOM 26(shubhra,shivanand,sourabh,shiv)/blog-project-1");
-
-        if(!isValidToken) return res.status(401).send({status:false,msg:"user has invalid token" });
+        jwt.verify(token , "ROOM 26(shubhra,shivanand,sourabh,shiv)/blog-project-1");
 
         next()
 

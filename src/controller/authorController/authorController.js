@@ -1,6 +1,5 @@
 
 const authorModel = require("../../model/authorModel");
-const { findOne } = require("../../model/blogModel");
 const {sign}=require('jsonwebtoken')
 
 const createAuthor = async (req, res) => {
