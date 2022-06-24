@@ -3,6 +3,7 @@ const { createAuthor,loginAuthor} = require('../controller/authorController');
 const { createBlog, getBlogs ,updateBlog ,deleteBlog ,deleteBlogByAny} = require('../controller/blogController');
 const {authentication, authorisation} = require('../middleWares/auth');
 const { blogDeleteCheck } = require('../middleWares/deleteCheck');
+const blogModel = require('../model/blogModel');
 
 
 const router =express.Router();
@@ -17,9 +18,11 @@ router.get('/blogs', authentication, getBlogs )
 
 router.put('/blogs/:blogId',authentication, authorisation,blogDeleteCheck ,updateBlog )
 
-router.delete('/blogs',authentication,  deleteBlogByAny )
+router.delete('/blogs',authentication,blogDeleteCheck, deleteBlogByAny )
 
 router.delete('/blogs/:blogId',authentication, authorisation,blogDeleteCheck, deleteBlog )
+
+ 
 
 
 

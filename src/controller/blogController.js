@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 // CREATE BLOG
 const createBlog = async (req, res) => {
   try {
+    if(req.body.tag)req.body.tag=req.body.tag.trim()
+    if(req.body.subcatogry)req.body.subcatogry=req.body.subcatogry.trim()
     if (Object.keys(req.body).length == 0)
       return res.status(400).send({ status: false, msg: "fill all fields" });
 
