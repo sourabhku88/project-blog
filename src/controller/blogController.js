@@ -119,6 +119,10 @@ const deleteBlog = async (req, res) => {
 const deleteBlogByAny = async (req, res) => {
   try {
     const { tag, subcatogry, isPublished, authorId, catagory } = req.query;
+    if (authorId && !mongoose.isValidObjectId(authorId)) return res.status(400).send({ status: false, msg: "please enter valid authorID" });
+
+    const filter = await blogModel.find(req.query);
+    if(filter.length == 0 || Object.keys(req.query).length === 0) return res.status(400).send({ succes: false ,msg :"Blog not found" });
     const filterData = await blogModel.updateMany(
       {
         $or: [
