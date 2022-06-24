@@ -5,11 +5,17 @@ const mongoose = require("mongoose");
 // CREATE BLOG
 const createBlog = async (req, res) => {
   try {
-    if(req.body.tag)req.body.tag=req.body.tag.trim()
+    let {title , body, authorId, catagory ,subcatogry , tag} = req.body
 
-    if(req.body.subcatogry)req.body.subcatogry=req.body.subcatogry.trim()
+    if( !title || !body ||!authorId ||!catagory ||!subcatogry || !tag ) return res.status(400).send({ status: false, msg: "fill all fields" });
 
-    if (Object.keys(req.body).length == 0) return res.status(400).send({ status: false, msg: "fill all fields" });
+    if(tag ||title || body  || catagory || subcatogry ) {
+      tag= tag.trim()
+      title= title.trim()
+      body= body.trim()
+      catagory= catagory.trim()
+      subcatogry= subcatogry.trim()
+    }
 
     if (!req.body.authorId) return res.status(400).send({ status: false, msg: "please enter authorID" });
 
@@ -64,7 +70,10 @@ const getBlogs = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const data = req.body;
-    if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "fill all fields" });
+
+    let {title , body ,tag ,subcatogry } = req.body
+    if(!title || !body ) return  res.status(400).send({ status: false, msg: " please enter title and body is required" });
+    if (!( title.length > 3 && body.length > 3)) return res.status(400).send({ status: false, msg: "title and body should be greater than 3" });
 
     const blogId = req.params.blogId;
 
@@ -72,12 +81,12 @@ const updateBlog = async (req, res) => {
 
     if (!blog || (blog.isDeleted === true) ) return res.status(400).send({ status: false, msg: "no such Blog present" });
 
-    if (data.tag) blog.tag.push(data.tag);
+    if (tag) blog.tag.push(tag);
 
-    if (data.subcatogry) blog.subcatogry.push(data.subcatogry);
+    if (subcatogry) blog.subcatogry.push(subcatogry);
 
-    blog.title = data.title;
-    blog.body = data.body;
+    blog.title = title;
+    blog.body = body;
     blog.isPublished = true;
     blog.publishedAt = new Date();
 
@@ -122,10 +131,9 @@ const deleteBlogByQuery = async (req, res) => {
     filter.isPublished = false
 
     if(Object.keys(filter).length == 2)  return res.status(400).send({ status: false, message: "Please Enter Query" })
-    console.log(filter);
    
     let data = await blogModel.find(filter).count();
-    console.log(data);
+
     if (!data) return res.status(404).send({ status: false, message: "no such data exists" })
 
     await blogModel.updateMany({filter}, { $set: { isDeleted: true, deletedAt:new Date } }, { new: true })
