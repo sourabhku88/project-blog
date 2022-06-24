@@ -37,14 +37,23 @@ const createBlog = async (req, res) => {
 // GET BLOGS
 const getBlogs = async (req, res) => {
     try{
+      let onlythisValue = ["authorId","catagory","tag","subcatogry"];
+      let store =  onlythisValue.some(ele =>Object.keys(req.query).includes(ele) );
+   
         let filter = req.query;
         filter.isDeleted =false
         filter.isPublished =true
+
         const data = await blogModel.find(filter);
+
         if(!(data.length > 0)) return res.status(404).send({status:false,msg:"Blog not Found"});
-        if(Object.keys(req.query).length == 0){
+
+        if(Object.keys(filter).length == 2){
+
             return res.status(200).send({status:true, data})
         }else{
+          if(!store)  return res.status(400).send({status:false, msg:"You cant filter this value"})
+
             const filterData = await blogModel.find(filter);
             
             if(filterData.length <= 0) return res.status(404).send({status:false, msg:"Not found blog"})
@@ -120,7 +129,8 @@ const deleteBlogByAny = async (req, res) => {
           { catagory },
         ],
       },
-      { isDeleted: true, deletedAt: new Date() }
+      { isDeleted: true, deletedAt: new Date() },
+      {new:true, upsert:true}
     );
     if (filterData) res.status(200).send({ succes: true });
   } catch (err) {
