@@ -16,46 +16,19 @@ const blogDeleteCheck = async function (req, res, next) {
                 return res.status(404).send({ status: false, msg: "Blog not Found" })
             }
         } else {
+            let blogData = null
             if (tag || subcatogry && Object.keys(arr).length == 0) {
-                if (tag && !subcatogry) {
-                    let blogData = await blogModel.find({ tag: { $in: [tag] } })
-                    let count = 0
-                    blogData.forEach(e => { if (e.isDeleted) count++ })
-                    if (count != 0) return res.status(404).send({ status: false, msg: "Already deleted" })
-
-                } else if (!tag && subcatogry) {
-                    let blogData = await blogModel.find({ subcatogry: { $in: [subcatogry] } })
-                    let count = 0
-                    blogData.forEach(e => { if (e.isDeleted) count++ })
-                    if (count != 0) return res.status(404).send({ status: false, msg: "Already deleted" })
-
-                } else if (tag && subcatogry) {
-                    let blogData = await blogModel.find({$and:[{ subcatogry: { $in: [subcatogry] } },{ tag: { $in: [tag] } }]})
-                    let count = 0
-                    blogData.forEach(e => { if (e.isDeleted) count++ })
-                    if (count != 0) return res.status(404).send({ status: false, msg: "Already deleted" })
-                }
-            }else{
-                if (tag && !subcatogry) {
-                    let blogData = await blogModel.find({$and:[{ tag: { $in: [tag] } },arr]})
-                    let count = 0
-                    blogData.forEach(e => { if (e.isDeleted) count++ })
-                    if (count != 0) return res.status(404).send({ status: false, msg: "Already deleted" })
-
-                } else if (!tag && subcatogry) {
-                    let blogData = await blogModel.find({$and:[{ subcatogry: { $in: [subcatogry] } },arr]})
-                    let count = 0
-                    blogData.forEach(e => { if (e.isDeleted) count++ })
-                    if (count != 0) return res.status(404).send({ status: false, msg: "Already deleted" })
-
-                } else if (tag && subcatogry) {
-                    let blogData = await blogModel.find({$and:[{ subcatogry: { $in: [subcatogry] } },{ tag: { $in: [tag] } },arr]})
-                    let count = 0
-                    blogData.forEach(e => { if (e.isDeleted) count++ })
-                    if (count != 0) return res.status(404).send({ status: false, msg: "Already deleted" })
-                }
-                
+                if (tag && !subcatogry) { blogData = await blogModel.find({ tag: { $in: [tag] } }) }
+                else if (!tag && subcatogry) { blogData = await blogModel.find({ subcatogry: { $in: [subcatogry] } }) }
+                else if (tag && subcatogry) { blogData = await blogModel.find({ $and: [{ subcatogry: { $in: [subcatogry] } }, { tag: { $in: [tag] } }] }) }
+            } else {
+                if (tag && !subcatogry) { blogData = await blogModel.find({ $and: [{ tag: { $in: [tag] } }, arr] }) }
+                else if (!tag && subcatogry) { blogData = await blogModel.find({ $and: [{ subcatogry: { $in: [subcatogry] } }, arr] }) }
+                else if (tag && subcatogry) { blogData = await blogModel.find({ $and: [{ subcatogry: { $in: [subcatogry] } }, { tag: { $in: [tag] } }, arr] }) }
             }
+            let count = 0
+            blogData.forEach(e => { if (e.isDeleted) count++ })
+            if (count != 0) return res.status(404).send({ status: false, msg: "Already deleted" })
         }
     } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
     next()
