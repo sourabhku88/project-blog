@@ -48,7 +48,7 @@ const loginAuthor = async (req,res)=>{
 
     let token=sign({_id:authorDetail._id},"ROOM 26(shubhra,shivanand,sourabh,shiv)/blog-project-1")
 
-    return res.status(200).send({status:true,TOKEN:token})
+    return res.status(200).send({status:true,data:token})
 
     }catch(err){return res.status(500).send({status:false,msg:err.massage})}
 }
