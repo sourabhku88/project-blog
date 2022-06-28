@@ -10,11 +10,7 @@ const createBlog = async (req, res) => {
     if( !title || !body ||!authorId ||!catagory ||!subcatogry || !tag ) return res.status(400).send({ status: false, msg: "fill all fields" });
 
     if(tag ||title || body  || catagory || subcatogry ) {
-      tag= tag.trim()
-      title= title.trim()
-      body= body.trim()
-      catagory= catagory.trim()
-      subcatogry= subcatogry.trim()
+      tag= tag.trim(); title= title.trim(); body= body.trim(); catagory= catagory.trim(); subcatogry= subcatogry.trim();
     }
 
     if (!req.body.authorId) return res.status(400).send({ status: false, msg: "please enter authorID" });
@@ -72,14 +68,18 @@ const updateBlog = async (req, res) => {
     const data = req.body;
 
     let {title , body ,tag ,subcatogry } = req.body
+
     if(!title || !body ) return  res.status(400).send({ status: false, msg: " please enter title and body is required" });
+
     if (!( title.length > 3 && body.length > 3)) return res.status(400).send({ status: false, msg: "title and body should be greater than 3" });
 
     const blogId = req.params.blogId;
 
+    if (!mongoose.isValidObjectId(blogId)) return res.status(400).send({ status: false, msg: "please enter valid BlogId" });
+
     const blog = await blogModel.findById(blogId);
 
-    if (!blog || (blog.isDeleted === true) ) return res.status(400).send({ status: false, msg: "no such Blog present" });
+    if (!blog || (blog.isDeleted === true) ) return res.status(404).send({ status: false, msg: "no such Blog present" });
 
     if (tag) blog.tag.push(tag);
 
@@ -112,7 +112,7 @@ const deleteBlogById = async (req, res) => {
     filter._id = blogId
     filter.isDeleted = false
 
-    const data =  await blogModel.updateOne(filter, {isDeleted: true,deletedAt: new Date(),});
+    const data =  await blogModel.updateOne(filter, {isDeleted: true,deletedAt: new Date(), });
 
     if(data.matchedCount === 0) return res.status(404).send({ status: false, msg: " Blog not found" });
 
@@ -128,7 +128,7 @@ const deleteBlogByQuery = async (req, res) => {
   try {
     let filter = req.query; 
     filter.isDeleted = false 
-    filter.isPublished = false
+    filter.isPublished = true
 
     if(Object.keys(filter).length == 2)  return res.status(400).send({ status: false, message: "Please Enter Query" })
    
@@ -137,9 +137,9 @@ const deleteBlogByQuery = async (req, res) => {
     if (!data) return res.status(404).send({ status: false, message: "no such data exists" })
 
     await blogModel.updateMany({filter}, { $set: { isDeleted: true, deletedAt:new Date } }, { new: true })
-    res.send({ status: true, data:"update "})
+    res.send({ status: true, })
 } catch (err) {
-    res.status(500).send({ status: false, Error: err.message });
+    res.status(500).send({ status: false, mag: err.message });
 }
 };
 

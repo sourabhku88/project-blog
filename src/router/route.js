@@ -2,6 +2,7 @@ const express =require('express');
 const { createAuthor,loginAuthor} = require('../controller/authorController');
 const { createBlog, getBlogs ,updateBlog ,deleteBlogById ,deleteBlogByQuery} = require('../controller/blogController');
 const {authentication, authorisation} = require('../middleWares/auth');
+const blogModel = require('../model/blogModel');
 
 
 const router =express.Router();
@@ -22,10 +23,10 @@ router.delete('/blogs',authentication, deleteBlogByQuery )
 router.delete('/blogs/:blogId',authentication, authorisation, deleteBlogById )
 
 //   deleted  reset Data 
-// router.put('/blogsup',async (req,res)=>{
-//     await blogModel.updateMany({},{isDeleted:false,deletedAt:null,isPublished:true})
-//     res.send("done")
-// } )
+router.put('/blogsup',async (req,res)=>{
+    await blogModel.updateMany({},{isDeleted:false,deletedAt:null,isPublished:true})
+    res.send("done")
+} )
 
  
 
